@@ -11,6 +11,8 @@ function App() {
   return (
     <div className="App">
        <Link to={"/home"}>Home</Link>
+       <Link to={"/"}>Login</Link>
+       <Link to={"/sign-up"}>Sign Up</Link>
       <Switch>
       <Route exact path="/" component={FormikLogin} />
       <Route exact path="/sign-up" component={SignUp} />
