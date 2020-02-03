@@ -1,18 +1,21 @@
 import React from 'react';
 import PrivateRoute from "./components/PrivateRoute"
-import {BrowserTouter as ROuter, Route, Switch, Link } from "react-router-dom"
+import {Route, Switch, Link } from "react-router-dom"
+import FormikLogin from "./components/Login"
+import SignUp from "./components/SignUp"
+import Home from "./components/Home"
 import './App.css';
+import styled from "styled-components"
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-       
-      </header>
+       <Link to={"/home"}>Home</Link>
       <Switch>
-      <Route exact path="/" component={Login} />
+      <Route exact path="/" component={FormikLogin} />
       <Route exact path="/sign-up" component={SignUp} />
-      <PrivateRoute path="/home" component={Home} />
+      {/* <PrivateRoute path="/home" component={Home} /> this is where i'm typing */}
+      <Route path="/home" component={Home} />
       </Switch>
     </div>
   );

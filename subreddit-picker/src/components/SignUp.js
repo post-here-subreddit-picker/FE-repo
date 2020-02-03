@@ -1,8 +1,44 @@
 import React, {useState, useEffect} from 'react'
 import {withFormik, Form, Field} from "formik"
-import axios from axios
+import axios from "axios"
 import * as Yup from 'yup'
+import styled from "styled-components"
 import {Link} from "react-router-dom"
+
+
+const FormStyle = styled(Form)`
+    display:flex;
+    flex-direction: column;
+    padding:20px;
+    align-items: center;
+`
+const Inputs = styled(Field)`
+    margin:10px;
+    padding:7px;
+    display: flex;
+    border-style: none;
+    border-radius: 3px;
+`
+
+const Button = styled.button`
+   color:white;
+  border-style: none;
+  border-radius: 8px;
+  background:#FF4301;
+  padding:5px 15px;
+  margin:20px;
+  font-size:1rem;
+`
+
+const FormContainer = styled.div`
+    width:500px;
+    margin:auto;
+    border-radius: 15px;
+    margin-top:220px;
+    background:rgba(194, 210, 223, 0.9);
+    border:1px solid white;
+    box-shadow: 10px 8px 20px #2b2b2b7c;
+`
 
 function SignUp({ values, errors, touched, state}) {
 
@@ -13,10 +49,10 @@ function SignUp({ values, errors, touched, state}) {
         password: ""
     });
 
-    useEffect(() => {
-        console.log("status has hanged", status);
-        status && setUser(newuser => [...newUser, status]);
-    }, [status])
+    // useEffect(() => {
+    //     console.log("status has hanged", status);
+    //     status && setUser(newuser => [...newUser, status]);
+    // }, [status])
 
     const handleChange = e => {
         setUser({
@@ -38,9 +74,9 @@ function SignUp({ values, errors, touched, state}) {
     // };
 
     return (
-        <div>
+        <FormContainer>
             <h1>Sign up here</h1>
-            <Form>
+            <FormStyle>
                 <Field
                     type="text"
                     name="firstName"
@@ -48,35 +84,35 @@ function SignUp({ values, errors, touched, state}) {
                     value={newUser.firstName}
                     onchange={handleChange}
                 />
-                <Field
+                <Inputs
                     type="text"
                     name="lastName"
                     placeholder="Last Name"
                     value={newUser.lastName}
                     onchange={handleChange}
                 />
-                <Field
+                <Inputs
                     type="text"
                     name="email"
                     placeholder="email"
                     value={newUser.email}
                     onchange={handleChange}
                 />
-                <Field
+                <Inputs
                     type="text"
                     name="password"
                     placeholder="password"
                     value={newUser.password}
                     onchange={handleChange}
                 />
-                <button> Create Your Account </button>
-            </Form>
+                <Button> Create Your Account </Button>
+            </FormStyle>
             <Link to={'/'}>If you already have an account click here</Link>
-        </div>
+        </FormContainer>
     );
 };
 
-const ValidatedUserForm = withFormik ({
+const ValidatedSignUp = withFormik ({
     mapPropsToValues({ FirstName, lastName, email, password}) {
         return{
             firstName: "",
