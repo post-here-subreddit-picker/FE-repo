@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import styled from "styled-components"
 import {Link} from "react-router-dom"
 
-
+//styles
 const FormStyle = styled(Form)`
     display:flex;
     flex-direction: column;
@@ -40,105 +40,88 @@ const FormContainer = styled.div`
     box-shadow: 10px 8px 20px #2b2b2b7c;
 `
 
-function SignUp({ values, errors, touched, state}) {
 
-    const [newUser, setUser] = useState({
-        firstName: "",
-        lastName: "",
+function SignUp({ values, errors, touched, state, history}) {
+
+    const [newUser, setNewUser] = useState({
+        name: "",
         email: "",
         password: ""
-    });
-
-    // useEffect(() => {
-    //     console.log("status has hanged", status);
-    //     status && setUser(newuser => [...newUser, status]);
-    // }, [status])
+    })
 
     const handleChange = e => {
-        setUser({
+        setNewUser({
             ...newUser,
             [e.target.name]: e.target.value
         });
     };
 
-    // const onSubmit = e => {
-    //     e.preventDefault();
-    //     axios
-    //         .post(//The post endpoint will be here when we get it  "", The post request takes the url and the new user that are being added to the server
-    //         newUser)
-    //         .then(res => {
-    //             console.log("This is the response from the backend", res)
-    //             this.history.push("/")
-    //         })
-    //         .catch(err => console.log("An error occurred while trying to add the new user", err));
-    // };
-
     return (
         <FormContainer>
-            <h1>Sign up here</h1>
-            <FormStyle>
-                <Field
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={newUser.firstName}
-                    onchange={handleChange}
-                />
-                <Inputs
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={newUser.lastName}
-                    onchange={handleChange}
-                />
-                <Inputs
-                    type="text"
-                    name="email"
-                    placeholder="email"
-                    value={newUser.email}
-                    onchange={handleChange}
-                />
-                <Inputs
-                    type="text"
-                    name="password"
-                    placeholder="password"
-                    value={newUser.password}
-                    onchange={handleChange}
-                />
-                <Button> Create Your Account </Button>
-            </FormStyle>
-            <Link to={'/'}>If you already have an account click here</Link>
+            <h2>Sign Up</h2>
+            <FormStyle autoComplete="off">
+                    <label>
+                        email
+                        <Inputs 
+                        className="inputs"
+                        type="text"
+                        name="email" 
+                        placeholder="email address"
+                        value={newUser.email}
+                        onChange={handleChange}
+                        autoComplete="off"
+                          />
+                        {touched.email && errors.email && (<p>{errors.email}</p>)}
+                    </label>
+
+                    <label>
+                        Password
+                        <Inputs 
+                        className="inputs" 
+                        type="password" 
+                        name="password" 
+                        placeholder="password"
+                        value={newUser.password}
+                        onChange={handleChange}
+                        autoComplete="off"
+                        />
+                        {touched.password && errors.password && (<p>{errors.password}</p>)}
+                    </label>
+
+                    <Button type="submit">Sign Up</Button>
+                </FormStyle>
+                <Link to={'/'}>Already have an account?</Link>
         </FormContainer>
-    );
-};
+    )
+}
 
-const ValidatedSignUp = withFormik ({
-    mapPropsToValues({ FirstName, lastName, email, password}) {
+//validation setup
+const FormikSignUp = withFormik({
+    mapPropsToValues(email, password){
         return{
-            firstName: "",
-            lastName: "",
-            email: "",
+            email: email || "",
             password: "",
-        };
+        }
     },
-    validationSchema: Yup.object().shape({// Yup still needs to be validated
-        firstName: Yup.string().required(),
-        lastName: Yup.string().required(),
-        email: Yup.string().email("invalid Email").required(),
-        password: Yup.string().required
+    //validation set up with error messages
+    validationSchema: Yup.object().shape({
+        email: Yup.string().email("Invalid email address").required("Email is required"),
+        password: Yup.string().required("Password is required"),
     }),
-    handleSubmit(values, { setStatus, resetForm}) {
-        console.log("Submitted values", values);
-        axios
-            .post(//the address of the api endpoint will go here,
-                values)
-            .then(res => {
-                console.log("Successful post, new user registered", res);
-                setStatus(res.data);
-                resetForm()
-    })
-    .catch(err => console.log(err.response))
+    //POSTing values submitted, to axios site
+    handleSubmit(values, {setStatus, resetForm}){
+        axios.post(" ", values)
+        .then(response => {
+            console.log("Success!", response)
+            resetForm()
+            setStatus(response.data)
+        })
+        .catch(error =>{
+            console.log(error)
+        })
     }
-})(SignUp);
+}) (SignUp)
 
-export default SignUp
+
+
+export default FormikSignUp
