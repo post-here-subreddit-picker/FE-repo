@@ -17,7 +17,15 @@ const Inputs = styled(Field)`
     padding:7px;
     display: flex;
     border-style: none;
-    border-radius: 3px;
+    background:none;
+    outline:none;
+    border-bottom: 1px solid white;
+    color:white;
+    width:200px;
+
+    ::placeholder{
+        color:white;
+    }
 `
 
 const Button = styled.button`
@@ -32,7 +40,8 @@ const Button = styled.button`
   &:hover{
     background:white;
     color:#FF4301;
-    transition: all 0.3s ease-in
+    transition: all 0.3s ease-in;
+    cursor:pointer;
   }
 `
 
@@ -44,6 +53,16 @@ const FormContainer = styled.div`
     background:#0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
+
+    h2{
+        font-size:2.2rem;
+        font-family: 'Poppins:600', sans-serif;
+        font-weight: bold;
+        color:white;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight:400;
+    }
 `
 
 
@@ -64,7 +83,7 @@ function Login({ values, errors, touched, state, history}) {
     return (
         <FormContainer>
             <h2>Login</h2>
-            <FormStyle autoComplete="off">
+            <FormStyle>
                     <label>
                         Email
                         <Inputs 
@@ -72,8 +91,6 @@ function Login({ values, errors, touched, state, history}) {
                         type="text"
                         name="email" 
                         placeholder="email address"
-                        value={credentials.email}
-                        onChange={handleChange}
                         autoComplete="off"
                           />
                         {touched.email && errors.email && (<p>{errors.email}</p>)}
@@ -86,8 +103,6 @@ function Login({ values, errors, touched, state, history}) {
                         type="password" 
                         name="password" 
                         placeholder="password"
-                        value={credentials.password}
-                        onChange={handleChange}
                         autoComplete="off"
                         />
                         {touched.password && errors.password && (<p>{errors.password}</p>)}
@@ -104,7 +119,7 @@ function Login({ values, errors, touched, state, history}) {
 const FormikLogin = withFormik({
     mapPropsToValues(email, password){
         return{
-            email: email || "",
+            email: "",
             password: "",
         }
     },

@@ -6,7 +6,7 @@
 }
 
  body {
-  background-color: #383838;
+  background-color: #53606b;
 }
 
 
@@ -25,6 +25,6 @@
 
 label p{
   font-size: 0.8rem;
-  color: rgb(255, 71, 71);
+  color: white;
 }
 
