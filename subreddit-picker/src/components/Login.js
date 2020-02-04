@@ -107,7 +107,7 @@ function Login({ values,
                         placeholder="username"
                         autoComplete="off"
                           />
-                        {touched.email && errors.email && (<p>{errors.email}</p>)}
+                        {touched.username && errors.username && (<p>{errors.username}</p>)}
                     </label>
 
                     <label>
