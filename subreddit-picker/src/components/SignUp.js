@@ -49,7 +49,7 @@ const FormContainer = styled.div`
     width:500px;
     margin:auto;
     border-radius: 15px;
-    margin-top:220px;
+    margin-bottom:220px;
     background: #0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
