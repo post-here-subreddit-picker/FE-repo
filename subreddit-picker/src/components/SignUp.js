@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
-import {withFormik, Form, Field} from "formik"
+import {withFormik, Form, Field, Formik} from "formik"
 import axios from "axios"
 import * as Yup from 'yup'
 import styled from "styled-components"
-import {Link} from "react-router-dom"
+import {Link, Redirect} from "react-router-dom"
 
 //styles
 const FormStyle = styled(Form)`
@@ -41,48 +41,51 @@ const FormContainer = styled.div`
 `
 
 
-function SignUp({ values, errors, touched, state, history}) {
+function SignUp({ values,
+     errors,
+      touched,
+       status
+        }) {
 
     const [newUser, setNewUser] = useState({
-        name: "",
-        email: "",
+        username: "",
         password: ""
     })
+    // const [signUpComplete, setSignUpComplete] = useState(false)
 
-    const handleChange = e => {
-        setNewUser({
-            ...newUser,
-            [e.target.name]: e.target.value
-        });
-    };
+    useEffect(() => {
+        console.log("status has changed!", status)
 
-    return (
-        <FormContainer>
-            <h2>Sign Up</h2>
-            <FormStyle autoComplete="off">
+        status &&
+            setNewUser({
+                ...newUser,
+                status
+            });
+    }, [status]);
+
+        return (
+            <FormContainer>
+                <h2>Sign Up</h2>
+                <FormStyle autoComplete="off">
                     <label>
-                        email
+                        Username:
                         <Inputs 
                         className="inputs"
                         type="text"
-                        name="email" 
-                        placeholder="email address"
-                        value={newUser.email}
-                        onChange={handleChange}
+                        name="username" 
+                        placeholder="username"
                         autoComplete="off"
                           />
                         {touched.email && errors.email && (<p>{errors.email}</p>)}
                     </label>
 
                     <label>
-                        Password
+                        Password:
                         <Inputs 
                         className="inputs" 
                         type="password" 
                         name="password" 
                         placeholder="password"
-                        value={newUser.password}
-                        onChange={handleChange}
                         autoComplete="off"
                         />
                         {touched.password && errors.password && (<p>{errors.password}</p>)}
@@ -97,27 +100,28 @@ function SignUp({ values, errors, touched, state, history}) {
 
 //validation setup
 const FormikSignUp = withFormik({
-    mapPropsToValues(email, password){
+    mapPropsToValues({username, password}){
         return{
-            email: email || "",
-            password: "",
+            username: username || "",
+            password: ""
         }
     },
     //validation set up with error messages
     validationSchema: Yup.object().shape({
-        email: Yup.string().email("Invalid email address").required("Email is required"),
+        username: Yup.string().required("Email is required"),
         password: Yup.string().required("Password is required"),
     }),
     //POSTing values submitted, to axios site
     handleSubmit(values, {setStatus, resetForm}){
-        axios.post(" ", values)
+        axios.post("http://post-here3.herokuapp.com/api/auth/register", values)
         .then(response => {
-            console.log("Success!", response)
+            console.log("Succesful sign up", response)
             resetForm()
             setStatus(response.data)
+            // history.push("/")
         })
         .catch(error =>{
-            console.log(error)
+            console.log("An error occurred while trying to add the new user", error)
         })
     }
 }) (SignUp)
