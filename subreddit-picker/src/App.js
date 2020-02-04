@@ -17,7 +17,7 @@ function App() {
       <Route exact path="/" component={FormikLogin} />
       <Route exact path="/sign-up" component={SignUp} />
       {/* <PrivateRoute path="/home" component={Home} /> this is where i'm typing */}
-      <Route path="/home" component={Home} />
+      <PrivateRoute path="/home" component={Home} />
       </Switch>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {withFormik, Form, Field} from "formik"
 import {Link} from "react-router-dom"
 import * as Yup from "yup"
@@ -66,31 +66,45 @@ const FormContainer = styled.div`
 `
 
 
-function Login({ values, errors, touched, state, history}) {
+function Login({ values,
+     errors,
+     touched,
+     status,
+     history}) {
 
     const [credentials, setCredentials] = useState({
-        email: "",
+        username: "",
         password: ""
     })
 
-    const handleChange = e => {
-        setCredentials({
-            ...credentials,
-            [e.target.name]: e.target.value
-        });
-    };
+    // const handleChange = e => {
+    //     setCredentials({
+    //         ...credentials,
+    //         [e.target.name]: e.target.value
+    //     });
+    // };
+
+    useEffect(() => {
+        console.log("status has changed", status);
+
+        status &&
+            setCredentials({
+                ...credentials,
+                status
+            });
+    }, [status])
 
     return (
         <FormContainer>
             <h2>Login</h2>
             <FormStyle>
                     <label>
-                        Email
+                        Username
                         <Inputs 
                         className="inputs"
                         type="text"
-                        name="email" 
-                        placeholder="email address"
+                        name="username" 
+                        placeholder="username"
                         autoComplete="off"
                           />
                         {touched.email && errors.email && (<p>{errors.email}</p>)}
@@ -117,24 +131,26 @@ function Login({ values, errors, touched, state, history}) {
 
 //validation setup
 const FormikLogin = withFormik({
-    mapPropsToValues(email, password){
+    mapPropsToValues(username, password){
         return{
-            email: "",
-            password: "",
+            username: username || "",
+            password: ""
         }
     },
     //validation set up with error messages
     validationSchema: Yup.object().shape({
-        email: Yup.string().email("Invalid email address").required("Email is required"),
+        username: Yup.string().required("username is required"),
         password: Yup.string().required("Password is required"),
     }),
     //POSTing values submitted, to axios site
     handleSubmit(values, {setStatus, resetForm}){
-        axios.post(" ", values)
+        console.log("this is values", values)
+        axios.post("http://post-here3.herokuapp.com/api/auth/login", values)
         .then(response => {
-            console.log("Success!", response)
+            console.log("Successful log in", response)
             resetForm()
             setStatus(response.data)
+            localStorage.setItem("token", response.data.password)
         })
         .catch(error =>{
             console.log(error)
