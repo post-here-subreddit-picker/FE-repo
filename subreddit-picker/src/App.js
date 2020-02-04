@@ -6,12 +6,13 @@ import SignUp from "./components/SignUp"
 import Home from "./components/Home"
 import Nav from "./components/Nav"
 import './App.css';
-import styled from "styled-components"
+import Image from "./components/Image"
 
 function App() {
   return (
     <div className="App">
        <Nav/>
+       <Image/>
       <Switch>
       <Route exact path="/" component={FormikLogin} />
       <Route exact path="/sign-up" component={SignUp} />
