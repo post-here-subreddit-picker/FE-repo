@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:600&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 
 .App {
   text-align: center;
+  font-family: 'Poppins', sans-serif;
 }
 
  body {
-  background-color: #666666;
+  background-color: #383838;
 }
 
 
@@ -17,7 +18,13 @@
   color: #383838
 }
 
+.linktologin{
+  text-decoration: none;
+  font-size:.8rem;
+}
 
-
-
+label p{
+  font-size: 0.8rem;
+  color: rgb(255, 71, 71);
+}
 

@@ -61,7 +61,7 @@ export default function Home() {
     }
     return (
         <FormDiv>
-            <h1>Welcome to the subreddit selector </h1>
+            <h1>Welcome to the Subreddit Selector </h1>
             <FormStyle>
             <Input
              type="text"

@@ -28,6 +28,12 @@ const Button = styled.button`
   padding:5px 15px;
   margin:20px;
   font-size:1rem;
+
+  &:hover{
+    background:white;
+    color:#FF4301;
+    transition: all 0.3s ease-in
+  }
 `
 
 const FormContainer = styled.div`
@@ -35,7 +41,7 @@ const FormContainer = styled.div`
     margin:auto;
     border-radius: 15px;
     margin-top:220px;
-    background:rgba(194, 210, 223, 0.9);
+    background:#0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
 `
@@ -88,8 +94,8 @@ function Login({ values, errors, touched, state, history}) {
                     </label>
 
                     <Button type="submit">Login</Button>
-                </FormStyle>
-                <Link to={'/sign-up'}>Create your account here</Link>
+                    <Link className="linktologin" to={'/sign-up'}>Create an account</Link>
+                </FormStyle> 
         </FormContainer>
     )
 }
