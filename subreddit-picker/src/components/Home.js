@@ -50,7 +50,7 @@ export default function Home() {
 
   useEffect(() => {
     axiosWithAuth()
-        .get("users")
+        .get("users/1/posts")
         .then(res => {
           console.log("this is the data from the user get request", res)
         })
