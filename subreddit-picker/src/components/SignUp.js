@@ -93,7 +93,7 @@ function SignUp({ values,
                 <h2>Sign Up</h2>
                 <FormStyle autoComplete="off">
                     <label>
-                        Username:
+                        Username
                         <Inputs 
                         className="inputs"
                         type="text"
@@ -105,7 +105,7 @@ function SignUp({ values,
                     </label>
 
                     <label>
-                        Password:
+                        Password
                         <Inputs 
                         className="inputs" 
                         type="password" 
@@ -134,7 +134,7 @@ const FormikSignUp = withFormik({
     },
     //validation set up with error messages
     validationSchema: Yup.object().shape({
-        username: Yup.string().required("Email is required"),
+        username: Yup.string().required("Username is required"),
         password: Yup.string().required("Password is required"),
     }),
     //POSTing values submitted, to axios site

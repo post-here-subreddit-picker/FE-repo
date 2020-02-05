@@ -107,7 +107,7 @@ function Login({ values,
                         placeholder="username"
                         autoComplete="off"
                           />
-                        {touched.email && errors.email && (<p>{errors.email}</p>)}
+                        {touched.username && errors.username && (<p>{errors.username}</p>)}
                     </label>
 
                     <label>
@@ -133,13 +133,13 @@ function Login({ values,
 const FormikLogin = withFormik({
     mapPropsToValues(username, password){
         return{
-            username: username || "",
+            username: "",
             password: ""
         }
     },
     //validation set up with error messages
     validationSchema: Yup.object().shape({
-        username: Yup.string().required("username is required"),
+        username: Yup.string().required("Username is required"),
         password: Yup.string().required("Password is required"),
     }),
     //POSTing values submitted, to axios site
