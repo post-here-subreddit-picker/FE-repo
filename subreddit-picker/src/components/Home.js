@@ -7,7 +7,7 @@ const FormDiv = styled.div`
 width:500px;
   margin:auto;
   border-radius: 15px;
-  margin-top:220px;
+  margin-bottom:220px;
   background:rgba(194, 210, 223, 0.9);
   border:1px solid white;
   box-shadow: 10px 8px 20px #2b2b2b7c;
@@ -85,7 +85,7 @@ export default function Home() {
     }
     return (
         <FormDiv>
-            <h1>Welcome to the subreddit selector </h1>
+            <h1>Welcome to the Subreddit Selector </h1>
             <FormStyle>
             <Input
              type="text"
