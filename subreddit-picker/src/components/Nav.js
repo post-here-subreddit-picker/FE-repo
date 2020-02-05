@@ -3,18 +3,19 @@ import {Link} from "react-router-dom"
 import styled from "styled-components"
 
 const NavDiv = styled.div`
-
+    
 `
 
 const NavBar = styled.nav`
     background:white;
-    height:63px;
+    padding:13px;
     display:flex;
     align-items:center;
     justify-content:space-evenly;
-
+    
     a{
         text-decoration:none;
+        color:#0079d3;
     }
 `
 

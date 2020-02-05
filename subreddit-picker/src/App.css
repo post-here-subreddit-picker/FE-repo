@@ -3,15 +3,11 @@
 .App {
   text-align: center;
   font-family: 'Poppins', sans-serif;
-  /* height:60vh; */
 }
 
  body {
-  background-color: #53606b;
-  height:100vh;
-  overflow:hidden;
+  background-color: #383838;
 }
-
 
 .main-color {
   color: #FF4301
