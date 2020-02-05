@@ -74,7 +74,7 @@ function Login({ values,
             <h2>Login</h2>
             <FormStyle autoComplete="off">
                     <label>
-                        Email
+                        Username
                         <Inputs 
                         className="inputs"
                         type="text"
@@ -129,7 +129,7 @@ const FormikLogin = withFormik({
             console.log("Successful log in", response)
             resetForm()
             setStatus(response.data)
-            localStorage.setItem("token", response.data.password)
+            localStorage.setItem("token", response.data.token)
         })
         .catch(error =>{
             console.log(error)

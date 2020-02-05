@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from "styled-components"
-
+import {axioswithAuth, axiosWithAuth} from '../utils/AxiosWithAuth'
+import axios from "axios"
 //styles
 const FormDiv = styled.div`
 width:500px;
@@ -47,16 +48,39 @@ const Button = styled.button`
 
 export default function Home() {
 
+  useEffect(() => {
+    axiosWithAuth()
+        .get("users")
+        .then(res => {
+          console.log("this is the data from the user get request", res)
+        })
+        .catch(err => {
+          console.log("An error occurred while trying to retrieve the user data", err)
+        })
+  }, [])
+
     const [newPost, setNewPost] = useState({
         title: "",
         body: ""
     });
-    const [pastPosts, setpastPosts] = useState([]);
+    const [pastPosts, setPastPosts] = useState([]);
 
     const handleChange = e => {
         setNewPost({
             ...newPost,
             [e.target.name]: [e.target.value]
+        })
+    }
+
+    const submissionHandler = e => {
+      e.preventDefault();
+      axiosWithAuth()
+        .post(`posts/`, newPost)
+        .then(res => {
+          console.log("This should display the post that we want to send to the backend", newPost)
+        })
+        .catch(err => {
+          console.log("An error occurred while trying to post", err)
         })
     }
     return (
