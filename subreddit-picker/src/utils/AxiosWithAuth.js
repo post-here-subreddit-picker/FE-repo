@@ -3,9 +3,9 @@ import axios from 'axios'
 
 export const axiosWithAuth = () => {
     return axios.create({
-        base: "http://post-here3.herokuapp.com/",
+        baseURL: "http://post-here3.herokuapp.com/api/",
         headers: {
-            Authorization: localStorage.getItem("")
+            Authorization: localStorage.getItem("token")
         }
     })
 }

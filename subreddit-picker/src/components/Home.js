@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import styled from "styled-components"
-import Axios from "axios"
+import {axioswithAuth, axiosWithAuth} from '../utils/AxiosWithAuth'
+import axios from "axios"
 import {withFormik, Form, Field} from "formik"
 import * as Yup from "yup"
+
 
 //styles
 const FormDiv = styled.div`
@@ -104,25 +106,42 @@ const Button = styled.button`
 
 function Home({values, errors, touched, status}) {
 
+  useEffect(() => {
+    axiosWithAuth()
+        .get("users/")
+        .then(res => {
+          console.log("this is the data from the user get request", res)
+        })
+        .catch(err => {
+          console.log("An error occurred while trying to retrieve the user data", err)
+        })
+  }, [])
+
     const [newPost, setNewPost] = useState({
         title: "",
         body: ""
     });
 
-    const [pastPosts, setpastPosts] = useState([]);
+    const [pastPosts, setPastPosts] = useState([]);
 
+    const handleChange = e => {
+        setNewPost({
+            ...newPost,
+            [e.target.name]: [e.target.value]
+        })
+    }
 
-    //fetch posts
-    // useEffect(() => {
-    //   Axios.get("http://post-here3.herokuapp.com/api/users")
-    //   .then(response => {
-    //     console.log(response)
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-    // }, [])
-
+    const submissionHandler = e => {
+      e.preventDefault();
+      axiosWithAuth()
+        .post(`posts/`, newPost)
+        .then(res => {
+          console.log("This should display the post that we want to send to the backend", newPost)
+        })
+        .catch(err => {
+          console.log("An error occurred while trying to post", err)
+        })
+    }
 
     return (
         <FormDiv>

@@ -150,7 +150,7 @@ const FormikLogin = withFormik({
             console.log("Successful log in", response)
             resetForm()
             setStatus(response.data)
-            localStorage.setItem("token", response.data.password)
+            localStorage.setItem("token", response.data.token)
         })
         .catch(error =>{
             console.log(error)
