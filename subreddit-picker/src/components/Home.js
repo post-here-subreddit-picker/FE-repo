@@ -121,8 +121,12 @@ const Button = styled.button`
     headline: "",
     content: ""
   });
-  const [pastPosts, setPastPosts] = useState([]);
+  const [pastPosts, setPastPosts] = useState([
+    { headline: "",
+      content: "" }
+  ]);
 
+// 
 
   useEffect(() => {
     axiosWithAuth()
@@ -144,6 +148,9 @@ const Button = styled.button`
         })
   }, [])
 
+
+// gets posts by specific user
+
     useEffect(() => {
       console.log("This is user id in the second use effect hook", userId)
       if(userId) {
@@ -152,6 +159,9 @@ const Button = styled.button`
             .then(res => {
               console.log("this is the response when we look for a specific users past posts", res)
               setPastPosts(res.data)
+            })
+            .catch(error => {
+              console.log(error)
             })
           }
     }, [userId])
@@ -162,6 +172,9 @@ const Button = styled.button`
             [e.target.name]: [e.target.value]
         })
     }
+
+
+// 
 
     const submissionHandler = values => {
       console.log("This is the new post before being sent to the backend", values)
@@ -215,10 +228,26 @@ const Button = styled.button`
 
             <Button type="submit">Submit</Button>
             </FormStyle>
+
+            <div className="card-container">
+                <h2>Previous Posts</h2>
+                <div className="cards">
+                    {pastPosts.map(post =>{
+                        return (
+                        <div className="eachcard">
+                            <h3>{post.headline}</h3>
+                            <p>{post.content}</p>
+                        </div>
+                    )
+                    })}
+                </div>
+            </div>
         </FormDiv>
     )
 };
 
+
+//validation
 const mapStateTOProps = state => {
   return {
     username: state.username
