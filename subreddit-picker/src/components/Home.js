@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
+import { connect } from 'react-redux'
 import styled from "styled-components"
-import {axioswithAuth, axiosWithAuth} from '../utils/AxiosWithAuth'
+import {axiosWithAuth} from '../utils/AxiosWithAuth'
+import {useLocalStorage} from "../hooks/useLocalStorage"
 import axios from "axios"
 //styles
 const FormDiv = styled.div`
@@ -45,25 +47,45 @@ const Button = styled.button`
 `
 
 
-
-export default function Home() {
+ function Home(props) {
+  // const [username, setUsername] = useLocalStorage(username, props.username)
+  const [userId, setUserId] = useState(null)
+  const [newPost, setNewPost] = useState({
+    title: "",
+    body: ""
+  });
+  const [pastPosts, setPastPosts] = useState([]);
 
   useEffect(() => {
     axiosWithAuth()
-        .get("users/1/posts")
+        .get("users")
         .then(res => {
           console.log("this is the data from the user get request", res)
+          console.log(res.data.filter(user => {
+              return user.username === props.username
+          }))
+          const user = res.data.filter(user => {
+            return user.username === props.username
+        })
+          console.log("This is the id that should be set as userId", user[0].id)
+          setUserId(user[0].id)
+          console.log("this is used ID", userId)
         })
         .catch(err => {
           console.log("An error occurred while trying to retrieve the user data", err)
         })
   }, [])
 
-    const [newPost, setNewPost] = useState({
-        title: "",
-        body: ""
-    });
-    const [pastPosts, setPastPosts] = useState([]);
+    useEffect(() => {
+      console.log("This is user id in the second use effect hook", userId)
+      if(userId) {
+      axiosWithAuth()
+            .get(`users/${userId}/posts`)
+            .then(res => {
+              console.log("this is the response when we look for a specific users past posts", res)
+            })
+          }
+    }, [userId])
 
     const handleChange = e => {
         setNewPost({
@@ -107,4 +129,15 @@ export default function Home() {
             </FormStyle>
         </FormDiv>
     )
+};
+
+const mapStateTOProps =state=> {
+  return {
+    username: state.username
+  }
 }
+
+export default connect(
+  mapStateTOProps,
+  {}
+)(Home);

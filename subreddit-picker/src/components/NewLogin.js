@@ -1,8 +1,10 @@
-import React from "react";
-import {useForm } from "react-hook-form"
+import React from 'react'
+import { useForm } from "react-hook-form"
+import { connect } from 'react-redux'
 import axios from "axios"
 import styled from "styled-components"
 import { Link } from "react-router-dom";
+import {retrieveUsername} from "../actions"
 
 //styles
 const FormStyle = styled.form`
@@ -39,62 +41,73 @@ const FormContainer = styled.div`
     box-shadow: 10px 8px 20px #2b2b2b7c;
 `
 
-const Login = () => {
+ function NewLogin(props) {
     const {handleSubmit, register, errors} = useForm();
     const onSubmit = values => {
-        console.log("These are the values being passed to the backend", values)
-        axios.post("http://post-here3.herokuapp.com/api/auth/login", values)
-            .then(response => {
-                console.log("successful log in ", response)
-                localStorage.setItem("token", response.data.password)
-                props.history.push("/home")
-            })
-            .catch(err => {
-                console.log("An error occurred while trying to log in", error)
-            })
-    }
+            console.log("These are the values being passed to the backend", values)
+            axios.post("http://post-here3.herokuapp.com/api/auth/login", values)
+                .then(response => {
+                    console.log("successful log in ", response)
+                    localStorage.setItem("token", response.data.token)
+                    props.retrieveUsername(values.username)
+                    props.history.push("/home")
+                })
+                .catch(err => {
+                    console.log("An error occurred while trying to log in", err)
+                })
+        }
+    ;
+    return (
+        <FormContainer>
+            <h2>Log in</h2>
+            <FormStyle onSubmit={handleSubmit(onSubmit)}>
+                <Inputs 
+                type="text"
+                name="username"
+                placeholder="Username"
+                ref={register({
+                    required: true,
+                minLength: 4,
+                maxLength: {
+                    value: 15,
+                    message: "The username cannot exceed 15 characters"
+                }
+                })}
+            />
+            {errors.username && errors.username.message}
+    
+            <Inputs 
+                name="password"
+                type="password"
+                placeholder="Password"
+                ref={register({
+                    required: true,
+                    minLength: {
+                        value: 5,
+                        message: "The password must be at least 5 characters long"
+                    },
+                    // pattern: {
+                    //     value:  /A-Z 0-9/i,
+                    //     message: "Only alphanumeric characters can be used in the password"
+                    // }
+                })}
+            />
+            {errors.password && errors.password.message}
+    
+            <Button type="submit">Sign Up</Button>
+            </FormStyle>
+            <Link to={'/sign-up'}>Create your account here</Link>
+        </FormContainer>
+    )
 };
 
-return (
-    <FormContainer>
-        <FormStyle onSubmit={handleSubmit(onSubmit)}>
-            <Inputs 
-            type="text"
-            name="username"
-            placeholder="Username"
-            ref={register({
-                required: true,
-            minLength: 4,
-            maxLength: {
-                value: 15,
-                message: "The username cannot exceed 15 characters"
-            }
-            })}
-        />
-        {errors.username && errors.username.message}
+const mapStateTOProps = state => {
+    return {
+        state
+    }
+}
 
-        <Inputs 
-            name="password"
-            type="password"
-            placeholder="Password"
-            ref={register({
-                required: true,
-                minLength: {
-                    value: 5,
-                    message: "The password must be at least 5 characters long"
-                },
-                pattern: {
-                    value:  /A-Z 0-9/i,
-                    message: "Only alphanumeric characters can be used in the password"
-                }
-            })}
-        />
-        {errors.password && errors.password.message}
-
-        <Button type="submit">Sign Up</Button>
-        </FormStyle>
-        <Link to={'/sign-up'}>Create your account here</Link>
-    </FormContainer>
-)
-
-export default Login
+export default connect(
+    mapStateTOProps,
+    {retrieveUsername}
+)(NewLogin)

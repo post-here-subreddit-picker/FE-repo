@@ -39,61 +39,59 @@ const FormContainer = styled.div`
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
 `
-
-
-const signUp = () => {
+export default function NewSignup(props) {
     const {handleSubmit, register, errors} = useForm();
     const onSubmit = values => {
         console.log("These are the values being passed to the backend", values)
         axios.post("http://post-here3.herokuapp.com/api/auth/register", values)
             .then(res => {
-                console.log("successful log in ", res)
+                console.log("successful sign in ", res)
                 props.history.push("/")
             })
             .catch(err => {
                 console.log("An error occurred while trying to log in", err)
             })
     }
-};
 
-return (
-    <FormContainer>
-    <FormStyle onSubmit={handleSubmit(onSubmit)}>
+
+    return (
+        <FormContainer>
+            <h2>Sign Up here</h2>
+        <FormStyle onSubmit={handleSubmit(onSubmit)}>
+            <Inputs 
+            type="text"
+            name="username"
+            placeholder="Username"
+            ref={register({
+                required: true,
+            minLength: 4,
+            maxLength: 14
+            })}
+        />
+        {errors.username && errors.username.message}
+
         <Inputs 
-        type="text"
-        name="username"
-        placeholder="Username"
-        ref={register({
-            required: true,
-           minLength: 4,
-           maxLength: 14
-        })}
-    />
-    {errors.username && errors.username.message}
+            type="password"
+            name="password"
+            placeholder="Password"
+            ref={register({
+                required: true,
+                minLength: {
+                    value: 5,
+                    message: "The password must be at least 5 characters long"
+                },
+                // pattern: {
+                //     value:  /A-Z 0-9/i,
+                //     message: "Only alphanumeric characters can be used in the password"
+                // }
+            })}
+        />
+        {errors.password && errors.password.message}
 
-    <Inputs 
-        name="password"
-        type="password"
-        name="password"
-        placeholder="Password"
-        ref={register({
-            required: true,
-            minLength: {
-                value: 5,
-                message: "The password must be at least 5 characters long"
-            },
-            pattern: {
-                value:  /A-Z 0-9/i,
-                message: "Only alphanumeric characters can be used in the password"
-            }
-        })}
-    />
-    {errors.password && errors.password.message}
+        <Button type="submit">Log in</Button>
+        </FormStyle>
+            <Link to={'/sign-up'}>Already have an account? Log in here</Link>
+        </FormContainer>
+    )
 
-    <Button type="submit">Log in</Button>
-    </FormStyle>
-        <Link to={'/sign-up'}>Already have an account? Log in here</Link>
-    </FormContainer>
-)
-
-export default signUp
+}
