@@ -3,8 +3,11 @@ import { connect } from 'react-redux'
 import styled from "styled-components"
 import {axiosWithAuth} from '../utils/AxiosWithAuth'
 import { useForm } from 'react-hook-form'
+import {deletePost, setPastPost} from '../actions'
 import axios from "axios"
 import * as Yup from "yup"
+import ConditionalForm from './ConditionalForm'
+
 
 
 //styles
@@ -120,12 +123,14 @@ const Button = styled.button`
 
 
  function Home(props) {
-  const {handleSubmit, register, errors} = useForm();
+  const {handleSubmit, register, errors, reset} = useForm();
   const [userId, setUserId] = useState(null)
-  const [newPost, setNewPost] = useState({
+  const [editing, setEditing] = useState(false);
+  const [postToEdit, SetPostToEdit] = useState({
     headline: "",
     content: ""
-  });
+  })
+  const [stateChange, setStateChange] = useState(false)
   const [pastPosts, setPastPosts] = useState([
     { headline: "",
       content: "" }
@@ -169,16 +174,21 @@ const Button = styled.button`
               console.log(error)
             })
           }
-    }, [userId])
+    }, [userId, stateChange])
 
-    const handleChange = e => {
-        setNewPost({
-            ...newPost,
-            [e.target.name]: [e.target.value]
-        })
+    const stateChangeHelper = () => {
+      setStateChange(!stateChange)
     }
 
+    const deletionHandler = (postId) => {
+      props.deletePost(postId)
+      stateChangeHelper()
+    }
 
+    const editPost = post => {
+      setEditing(true);
+      SetPostToEdit(post)
+    };
 // 
 
     const submissionHandler = values => {
@@ -188,10 +198,25 @@ const Button = styled.button`
         .then(res => {
           console.log("This should display the post that we want to send to the backend", values)
           console.log("This is the response from the post post request", res)
+          stateChangeHelper()
+          reset()
         })
         .catch(err => {
           console.log("An error occurred while trying to post", err)
         })
+    }
+
+    const updateHandler = valuesToChange => {
+      console.log("These are the updated values before being sent to the backend for update", valuesToChange)
+      axiosWithAuth()
+      .put(`posts/${postToEdit.id}`, valuesToChange)
+      .then( res => {
+        console.log("Successful update the post has been updated", res)
+        stateChangeHelper()
+      })
+      .catch(err => {
+        console.log("An error occurred while trying to update a post", err)
+      })
     }
     console.log(`These are the past posts for the user ${props.username}`, pastPosts)
 
@@ -199,8 +224,9 @@ const Button = styled.button`
     return (
         <FormDiv onSubmit={handleSubmit(submissionHandler)}>
             <FormStyle>
-            <h1>Welcome to PostHere</h1>
-            <h2>The Subreddit Suggester</h2>
+              <h1>Welcome to PostHere, {props.username}</h1>
+                <h2>The Subreddit Suggestor</h2>
+
             <Label>
               <Input 
               type="text" 
@@ -248,10 +274,15 @@ const Button = styled.button`
                         <div className="eachcard">
                             <h3>{post.headline}</h3>
                             <p>{post.content}</p>
+                            <Button onClick={() => editPost(post)}>Update</Button>
+                            <Button onClick={() => deletionHandler(post.id)}>Delete</Button>
                         </div>
                     )
                     })}
                 </div>
+                {editing && (
+                <ConditionalForm setEditing={setEditing} editing={editing} updateHandler={updateHandler} />
+                )}
             </div>
         </FormDiv>
     )
@@ -261,13 +292,13 @@ const Button = styled.button`
 //validation
 const mapStateTOProps = state => {
   return {
-    username: state.username
+    username: state.username,
   }
 }
 
 export default connect(
   mapStateTOProps,
-  {}
+  {deletePost, setPastPost}
 )(Home);
 
 
