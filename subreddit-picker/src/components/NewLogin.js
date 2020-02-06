@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import {retrieveUsername} from "../actions"
 
 //styles
-const FormStyle = styled.form`
+const FormStyle = styled.div`
     display:flex;
     flex-direction: column;
     padding:20px;
@@ -18,7 +18,15 @@ const Inputs = styled.input`
     padding:7px;
     display: flex;
     border-style: none;
-    border-radius: 3px;
+    background:none;
+    outline:none;
+    border-bottom: 1px solid white;
+    color:white;
+    width:200px;
+
+    ::placeholder{
+        color:white;
+    }
 `
 
 const Button = styled.button`
@@ -29,16 +37,33 @@ const Button = styled.button`
   padding:5px 15px;
   margin:20px;
   font-size:1rem;
+
+  &:hover{
+    background:white;
+    color:#FF4301;
+    transition: all 0.3s ease-in;
+    cursor:pointer;
+  }
 `
 
 const FormContainer = styled.div`
     width:500px;
     margin:auto;
     border-radius: 15px;
-    margin-top:220px;
-    background:rgba(194, 210, 223, 0.9);
+    margin-bottom:220px;
+    background:#0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
+
+    h2{
+        font-size:2.2rem;
+        font-family: 'Poppins:600', sans-serif;
+        font-weight: bold;
+        color:white;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight:400;
+    }
 `
 
  function NewLogin(props) {
@@ -59,12 +84,12 @@ const FormContainer = styled.div`
     ;
     return (
         <FormContainer>
-            <h2>Log in</h2>
+            <h2>Login</h2>
             <FormStyle onSubmit={handleSubmit(onSubmit)}>
                 <Inputs 
                 type="text"
                 name="username"
-                placeholder="Username"
+                placeholder="username"
                 ref={register({
                     required: true,
                 minLength: 4,
@@ -79,7 +104,7 @@ const FormContainer = styled.div`
             <Inputs 
                 name="password"
                 type="password"
-                placeholder="Password"
+                placeholder="password"
                 ref={register({
                     required: true,
                     minLength: {
@@ -94,9 +119,9 @@ const FormContainer = styled.div`
             />
             {errors.password && errors.password.message}
     
-            <Button type="submit">Sign Up</Button>
+            <Button type="submit">Login</Button>
             </FormStyle>
-            <Link to={'/sign-up'}>Create your account here</Link>
+            <Link className="link" to={'/sign-up'}>Create your account here</Link>
         </FormContainer>
     )
 };

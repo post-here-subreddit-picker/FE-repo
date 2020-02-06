@@ -9,18 +9,27 @@ import * as Yup from "yup"
 
 //styles
 const FormDiv = styled.div`
-width:600px;
+  width:600px;
   margin:auto;
   display:flex;
   flex-direction:column;
   margin-bottom:40px;
-
+  
   h1{
     color:#ffffff;
     font-weight:400;
     font-family: 'Poppins:600', sans-serif;
     text-transform: uppercase;
     letter-spacing: 4px;
+  }
+
+  h2{
+    color:#ffffff;
+    font-weight:400;
+    font-family: 'Poppins:600', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top:0;
   }
 `
 
@@ -58,7 +67,7 @@ const Label = styled.label`
   width:100%;
 `
 
-const TextArea = styled.input`
+const TextArea = styled.textarea`
   height: 150px;
   line-height: 150%;
   resize:vertical;
@@ -117,7 +126,7 @@ const Button = styled.button`
 
   useEffect(() => {
     axiosWithAuth()
-        .get("users")
+        .get("users/")
         .then(res => {
           console.log("this is the data from the user get request", res)
           console.log(res.data.filter(user => {
@@ -167,16 +176,18 @@ const Button = styled.button`
         })
     }
     console.log(`These are the past posts for the user ${props.username}`, pastPosts)
+
+
     return (
         <FormDiv onSubmit={handleSubmit(submissionHandler)}>
             <FormStyle>
             <h1>Welcome to PostHere</h1>
-            
+            <h2>The Subreddit Suggestor</h2>
             <Label>
               <Input 
               type="text" 
               name="headline" 
-              placeholder="headline"
+              placeholder="Title"
               ref={register({
                 required: true,
                 minLength: 4
@@ -191,7 +202,7 @@ const Button = styled.button`
                 component="textarea" 
                 type="content" 
                 name="content" 
-                placeholder="content" rows="6" cols="50"
+                placeholder="Post" rows="6" cols="50"
                 ref={register({
                   required: true,
                   minLength: 10
