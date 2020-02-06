@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 
 //styles
-const FormStyle = styled.form`
+const FormStyle = styled.div`
     display:flex;
     flex-direction: column;
     padding:20px;
@@ -17,7 +17,15 @@ const Inputs = styled.input`
     padding:7px;
     display: flex;
     border-style: none;
-    border-radius: 3px;
+    background:none;
+    outline:none;
+    border-bottom: 1px solid white;
+    color:white;
+    width:200px;
+
+    ::placeholder{
+        color:white;
+    }
 `
 
 const Button = styled.button`
@@ -28,72 +36,88 @@ const Button = styled.button`
   padding:5px 15px;
   margin:20px;
   font-size:1rem;
+
+  &:hover{
+    background:white;
+    color:#FF4301;
+    transition: all 0.3s ease-in;
+    cursor:pointer;
+  }
 `
 
 const FormContainer = styled.div`
     width:500px;
     margin:auto;
     border-radius: 15px;
-    margin-top:220px;
-    background:rgba(194, 210, 223, 0.9);
+    margin-bottom:220px;
+    background: #0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
+
+    h2{
+        font-size:2.2rem;
+        font-family: 'Poppins:600', sans-serif;
+        font-weight: bold;
+        color:white;
+        text-transform:uppercase;
+        letter-spacing:2px;
+        font-weight:400;
+    }
 `
 
-
-const signUp = () => {
+export default function NewSignup(props) {
     const {handleSubmit, register, errors} = useForm();
-    const onSubmit = values => {
+    const onSubmit = values =>  {
         console.log("These are the values being passed to the backend", values)
         axios.post("http://post-here3.herokuapp.com/api/auth/register", values)
             .then(res => {
-                console.log("successful log in ", res)
+                console.log("successful sign in ", res)
                 props.history.push("/")
             })
             .catch(err => {
                 console.log("An error occurred while trying to log in", err)
             })
     }
-};
 
-return (
-    <FormContainer>
-    <FormStyle onSubmit={handleSubmit(onSubmit)}>
+
+    return (
+        <FormContainer>
+            <h2>Sign Up</h2>
+        <FormStyle onSubmit={handleSubmit(onSubmit)}>
+            <Inputs 
+            type="text"
+            name="username"
+            placeholder="username"
+            ref={register({
+                required: true,
+            minLength: 4,
+            maxLength: 14
+            })}
+        />
+        {errors.username && errors.username.message}
+
         <Inputs 
-        type="text"
-        name="username"
-        placeholder="Username"
-        ref={register({
-            required: true,
-           minLength: 4,
-           maxLength: 14
-        })}
-    />
-    {errors.username && errors.username.message}
+            type="password"
+            name="password"
+            placeholder="password"
+            ref={register({
+                required: true,
+                minLength: {
+                    value: 5,
+                    message: "The password must be at least 5 characters long"
+                },
+                // pattern: {
+                //     value:  /A-Z 0-9/i,
+                //     message: "Only alphanumeric characters can be used in the password"
+                // }
+            })}
+        />
+        {errors.password && errors.password.message}
 
-    <Inputs 
-        name="password"
-        type="password"
-        name="password"
-        placeholder="Password"
-        ref={register({
-            required: true,
-            minLength: {
-                value: 5,
-                message: "The password must be at least 5 characters long"
-            },
-            pattern: {
-                value:  /A-Z 0-9/i,
-                message: "Only alphanumeric characters can be used in the password"
-            }
-        })}
-    />
-    {errors.password && errors.password.message}
+        <Button type="submit">Sign Up</Button>
+        </FormStyle>
+            <Link className="link" to={'/sign-up'}>Already have an account?</Link>
+        </FormContainer>
+    )
 
-    <Button type="submit">Log in</Button>
-    </FormStyle>
-        <Link to={'/sign-up'}>Already have an account? Log in here</Link>
-    </FormContainer>
-)
-
-export default signUp
+}

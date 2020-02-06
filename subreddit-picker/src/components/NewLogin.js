@@ -1,11 +1,13 @@
-import React from "react";
-import {useForm } from "react-hook-form"
+import React from 'react'
+import { useForm } from "react-hook-form"
+import { connect } from 'react-redux'
 import axios from "axios"
 import styled from "styled-components"
 import { Link } from "react-router-dom";
+import {retrieveUsername} from "../actions"
 
 //styles
-const FormStyle = styled.form`
+const FormStyle = styled.div`
     display:flex;
     flex-direction: column;
     padding:20px;
@@ -16,7 +18,15 @@ const Inputs = styled.input`
     padding:7px;
     display: flex;
     border-style: none;
-    border-radius: 3px;
+    background:none;
+    outline:none;
+    border-bottom: 1px solid white;
+    color:white;
+    width:200px;
+
+    ::placeholder{
+        color:white;
+    }
 `
 
 const Button = styled.button`
@@ -27,74 +37,102 @@ const Button = styled.button`
   padding:5px 15px;
   margin:20px;
   font-size:1rem;
+
+  &:hover{
+    background:white;
+    color:#FF4301;
+    transition: all 0.3s ease-in;
+    cursor:pointer;
+  }
 `
 
 const FormContainer = styled.div`
     width:500px;
     margin:auto;
     border-radius: 15px;
-    margin-top:220px;
-    background:rgba(194, 210, 223, 0.9);
+    margin-bottom:220px;
+    background:#0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
+
+    h2{
+        font-size:2.2rem;
+        font-family: 'Poppins:600', sans-serif;
+        font-weight: bold;
+        color:white;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight:400;
+    }
 `
 
-const Login = () => {
+ function NewLogin(props) {
     const {handleSubmit, register, errors} = useForm();
     const onSubmit = values => {
-        console.log("These are the values being passed to the backend", values)
-        axios.post("http://post-here3.herokuapp.com/api/auth/login", values)
-            .then(response => {
-                console.log("successful log in ", response)
-                localStorage.setItem("token", response.data.password)
-                props.history.push("/home")
-            })
-            .catch(err => {
-                console.log("An error occurred while trying to log in", error)
-            })
-    }
+            console.log("These are the values being passed to the backend", values)
+            axios.post("http://post-here3.herokuapp.com/api/auth/login", values)
+                .then(response => {
+                    console.log("successful log in ", response)
+                    localStorage.setItem("token", response.data.token)
+                    props.retrieveUsername(values.username)
+                    props.history.push("/home")
+                })
+                .catch(err => {
+                    console.log("An error occurred while trying to log in", err)
+                })
+        }
+    ;
+    return (
+        <FormContainer>
+            <h2>Login</h2>
+            <FormStyle onSubmit={handleSubmit(onSubmit)}>
+                <Inputs 
+                type="text"
+                name="username"
+                placeholder="username"
+                ref={register({
+                    required: true,
+                minLength: 4,
+                maxLength: {
+                    value: 15,
+                    message: "The username cannot exceed 15 characters"
+                }
+                })}
+            />
+            {errors.username && errors.username.message}
+    
+            <Inputs 
+                name="password"
+                type="password"
+                placeholder="password"
+                ref={register({
+                    required: true,
+                    minLength: {
+                        value: 5,
+                        message: "The password must be at least 5 characters long"
+                    },
+                    // pattern: {
+                    //     value:  /A-Z 0-9/i,
+                    //     message: "Only alphanumeric characters can be used in the password"
+                    // }
+                })}
+            />
+            {errors.password && errors.password.message}
+    
+            <Button type="submit">Login</Button>
+            </FormStyle>
+            <Link className="link" to={'/sign-up'}>Create your account here</Link>
+        </FormContainer>
+    )
 };
 
-return (
-    <FormContainer>
-        <FormStyle onSubmit={handleSubmit(onSubmit)}>
-            <Inputs 
-            type="text"
-            name="username"
-            placeholder="Username"
-            ref={register({
-                required: true,
-            minLength: 4,
-            maxLength: {
-                value: 15,
-                message: "The username cannot exceed 15 characters"
-            }
-            })}
-        />
-        {errors.username && errors.username.message}
+const mapStateTOProps = state => {
+    return {
+        state
+    }
+}
 
-        <Inputs 
-            name="password"
-            type="password"
-            placeholder="Password"
-            ref={register({
-                required: true,
-                minLength: {
-                    value: 5,
-                    message: "The password must be at least 5 characters long"
-                },
-                pattern: {
-                    value:  /A-Z 0-9/i,
-                    message: "Only alphanumeric characters can be used in the password"
-                }
-            })}
-        />
-        {errors.password && errors.password.message}
-
-        <Button type="submit">Sign Up</Button>
-        </FormStyle>
-        <Link to={'/sign-up'}>Create your account here</Link>
-    </FormContainer>
-)
-
-export default Login
+export default connect(
+    mapStateTOProps,
+    {retrieveUsername}
+)(NewLogin)
