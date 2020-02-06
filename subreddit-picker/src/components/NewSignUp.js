@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 
 //styles
-const FormStyle = styled.div`
+const FormStyle = styled.form`
     display:flex;
     flex-direction: column;
     padding:20px;
