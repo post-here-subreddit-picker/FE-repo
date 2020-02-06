@@ -41,7 +41,7 @@ const FormContainer = styled.div`
 `
 export default function NewSignup(props) {
     const {handleSubmit, register, errors} = useForm();
-    const onSubmit = values => {
+    const onSubmit = values =>  {
         console.log("These are the values being passed to the backend", values)
         axios.post("http://post-here3.herokuapp.com/api/auth/register", values)
             .then(res => {

@@ -2,17 +2,26 @@ import React, {useState, useEffect} from 'react'
 import { connect } from 'react-redux'
 import styled from "styled-components"
 import {axiosWithAuth} from '../utils/AxiosWithAuth'
-import {useLocalStorage} from "../hooks/useLocalStorage"
+import { useForm } from 'react-hook-form'
 import axios from "axios"
+import * as Yup from "yup"
+
+
 //styles
 const FormDiv = styled.div`
-width:500px;
+width:600px;
   margin:auto;
-  border-radius: 15px;
-  margin-bottom:220px;
-  background:rgba(194, 210, 223, 0.9);
-  border:1px solid white;
-  box-shadow: 10px 8px 20px #2b2b2b7c;
+  display:flex;
+  flex-direction:column;
+  margin-bottom:40px;
+
+  h1{
+    color:#ffffff;
+    font-weight:400;
+    font-family: 'Poppins:600', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+  }
 `
 
 const FormStyle = styled.form`
@@ -23,38 +32,88 @@ const FormStyle = styled.form`
     width:100%;
 `
 const Input = styled.input`
-  margin:10px;
-  padding:7px;
-  display: flex;
-  border-style: none;
-  border-radius: 3px;
+  color:white;
+  font-size: 1rem;
+  border-radius: 5px;
+  line-height: 22px;
+  background:none;
+  outline:none;
+  border:2px solid #0079d3;
+  transition: all 0.3s;
+  padding: 13px;
+  margin-bottom: 15px;
+  width:100%;
+  box-sizing: border-box;
+
+  :focus { 
+  border:2px solid white;
+  }
+
+  ::placeholder{
+        color:white;
+    }
 `
-const TextArea = styled.textarea`
-  margin:10px;
-  padding:7px;
-  display: flex;
-  border-style: none;
-  border-radius: 3px;
+
+const Label = styled.label`
+  width:100%;
+`
+
+const TextArea = styled.input`
+  height: 150px;
+  line-height: 150%;
+  resize:vertical;
+  color:white;
+  font-weight:500;
+  font-size: 1rem;
+  border-radius: 5px;
+  line-height: 22px;
+  background:none;
+  outline:none;
+  border:2px solid #0079d3;
+  transition: all 0.3s;
+  padding: 13px;
+  margin-bottom: 15px;
+  width:100%;
+  box-sizing: border-box;
+
+  :focus { 
+  border:2px solid white; 
+  }
+
+  ::placeholder{
+        color:white;
+        font-weight:400;
+    
+}
 `
 const Button = styled.button`
-   color:white;
+  color:white;
   border-style: none;
   border-radius: 8px;
   background:#FF4301;
   padding:5px 15px;
   margin:20px;
   font-size:1rem;
+
+  &:hover{
+    background:white;
+    color:#FF4301;
+    transition: all 0.3s ease-in;
+    cursor:pointer;
+}
 `
 
 
+
  function Home(props) {
-  // const [username, setUsername] = useLocalStorage(username, props.username)
+  const {handleSubmit, register, errors} = useForm();
   const [userId, setUserId] = useState(null)
   const [newPost, setNewPost] = useState({
-    title: "",
-    body: ""
+    headline: "",
+    content: ""
   });
   const [pastPosts, setPastPosts] = useState([]);
+
 
   useEffect(() => {
     axiosWithAuth()
@@ -83,6 +142,7 @@ const Button = styled.button`
             .get(`users/${userId}/posts`)
             .then(res => {
               console.log("this is the response when we look for a specific users past posts", res)
+              setPastPosts(res.data)
             })
           }
     }, [userId])
@@ -94,44 +154,61 @@ const Button = styled.button`
         })
     }
 
-    const submissionHandler = e => {
-      e.preventDefault();
+    const submissionHandler = values => {
+      console.log("This is the new post before being sent to the backend", values)
       axiosWithAuth()
-        .post(`posts/`, newPost)
+        .post(`posts/${userId}`, values)
         .then(res => {
-          console.log("This should display the post that we want to send to the backend", newPost)
+          console.log("This should display the post that we want to send to the backend", values)
+          console.log("This is the response from the post post request", res)
         })
         .catch(err => {
           console.log("An error occurred while trying to post", err)
         })
     }
+    console.log(`These are the past posts for the user ${props.username}`, pastPosts)
     return (
-        <FormDiv>
-            <h1>Welcome to the Subreddit Selector </h1>
+        <FormDiv onSubmit={handleSubmit(submissionHandler)}>
             <FormStyle>
-            <Input
-             type="text"
-             name="title"
-             placeholder="Title"
-             value={newPost.title}
-             onChange={handleChange}
-             />
-            <TextArea
-            type="text"
-            name="redditPost"
-            placeholder="Write your post here"
-            value={newPost.body}
-            onChange={handleChange}
-            rows="6"
-            cols="50"
-            />
-            <Button>Submit</Button>
+            <h1>Welcome to PostHere</h1>
+            
+            <Label>
+              <Input 
+              type="text" 
+              name="headline" 
+              placeholder="headline"
+              ref={register({
+                required: true,
+                minLength: 4
+              })
+              }
+              />
+              {/* {touched.title && errors.title && (<p>{errors.title}</p>)} */}
+            </Label>
+
+             <Label>
+                <TextArea 
+                component="textarea" 
+                type="content" 
+                name="content" 
+                placeholder="content" rows="6" cols="50"
+                ref={register({
+                  required: true,
+                  minLength: 10
+                 })
+
+                }
+                />
+                {/* {touched.body && errors.body && (<p>{errors.body}</p>)} */}
+            </Label>
+
+            <Button type="submit">Submit</Button>
             </FormStyle>
         </FormDiv>
     )
 };
 
-const mapStateTOProps =state=> {
+const mapStateTOProps = state => {
   return {
     username: state.username
   }
@@ -141,3 +218,5 @@ export default connect(
   mapStateTOProps,
   {}
 )(Home);
+
+
