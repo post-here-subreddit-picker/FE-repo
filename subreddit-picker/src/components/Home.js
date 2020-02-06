@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react'
+import { connect } from 'react-redux'
 import styled from "styled-components"
-import {axioswithAuth, axiosWithAuth} from '../utils/AxiosWithAuth'
+import {axiosWithAuth} from '../utils/AxiosWithAuth'
+import { useForm } from 'react-hook-form'
 import axios from "axios"
-import {withFormik, Form, Field} from "formik"
 import * as Yup from "yup"
 
 
@@ -23,14 +24,14 @@ width:600px;
   }
 `
 
-const FormStyle = styled(Form)`
+const FormStyle = styled.form`
     display:flex;
     flex-direction: column;
     padding:20px;
     align-items: center;
     width:100%;
 `
-const Input = styled(Field)`
+const Input = styled.input`
   color:white;
   font-size: 1rem;
   border-radius: 5px;
@@ -57,7 +58,7 @@ const Label = styled.label`
   width:100%;
 `
 
-const TextArea = styled(Field)`
+const TextArea = styled.input`
   height: 150px;
   line-height: 150%;
   resize:vertical;
@@ -104,25 +105,47 @@ const Button = styled.button`
 
 
 
-function Home({values, errors, touched, status}) {
+ function Home(props) {
+  const {handleSubmit, register, errors} = useForm();
+  const [userId, setUserId] = useState(null)
+  const [newPost, setNewPost] = useState({
+    headline: "",
+    content: ""
+  });
+  const [pastPosts, setPastPosts] = useState([]);
+
 
   useEffect(() => {
     axiosWithAuth()
         .get("users")
         .then(res => {
           console.log("this is the data from the user get request", res)
+          console.log(res.data.filter(user => {
+              return user.username === props.username
+          }))
+          const user = res.data.filter(user => {
+            return user.username === props.username
+        })
+          console.log("This is the id that should be set as userId", user[0].id)
+          setUserId(user[0].id)
+          console.log("this is used ID", userId)
         })
         .catch(err => {
           console.log("An error occurred while trying to retrieve the user data", err)
         })
   }, [])
 
-    const [newPost, setNewPost] = useState({
-        title: "",
-        body: ""
-    });
-
-    const [pastPosts, setPastPosts] = useState([]);
+    useEffect(() => {
+      console.log("This is user id in the second use effect hook", userId)
+      if(userId) {
+      axiosWithAuth()
+            .get(`users/${userId}/posts`)
+            .then(res => {
+              console.log("this is the response when we look for a specific users past posts", res)
+              setPastPosts(res.data)
+            })
+          }
+    }, [userId])
 
     const handleChange = e => {
         setNewPost({
@@ -131,53 +154,69 @@ function Home({values, errors, touched, status}) {
         })
     }
 
-    const submissionHandler = e => {
-      e.preventDefault();
+    const submissionHandler = values => {
+      console.log("This is the new post before being sent to the backend", values)
       axiosWithAuth()
-        .post(`posts/`, newPost)
+        .post(`posts/${userId}`, values)
         .then(res => {
-          console.log("This should display the post that we want to send to the backend", newPost)
+          console.log("This should display the post that we want to send to the backend", values)
+          console.log("This is the response from the post post request", res)
         })
         .catch(err => {
           console.log("An error occurred while trying to post", err)
         })
     }
-
+    console.log(`These are the past posts for the user ${props.username}`, pastPosts)
     return (
-        <FormDiv>
+        <FormDiv onSubmit={handleSubmit(submissionHandler)}>
             <FormStyle>
             <h1>Welcome to PostHere</h1>
             
             <Label>
-              <Input type="text" name="title" placeholder="Title"/>
-              {touched.title && errors.title && (<p>{errors.title}</p>)}
+              <Input 
+              type="text" 
+              name="headline" 
+              placeholder="headline"
+              ref={register({
+                required: true,
+                minLength: 4
+              })
+              }
+              />
+              {/* {touched.title && errors.title && (<p>{errors.title}</p>)} */}
             </Label>
 
              <Label>
-                <TextArea component="textarea" type="text" name="body" placeholder="Post" rows="6" cols="50"/>
-                {touched.body && errors.body && (<p>{errors.body}</p>)}
+                <TextArea 
+                component="textarea" 
+                type="content" 
+                name="content" 
+                placeholder="content" rows="6" cols="50"
+                ref={register({
+                  required: true,
+                  minLength: 10
+                 })
+
+                }
+                />
+                {/* {touched.body && errors.body && (<p>{errors.body}</p>)} */}
             </Label>
 
             <Button type="submit">Submit</Button>
             </FormStyle>
         </FormDiv>
     )
+};
+
+const mapStateTOProps = state => {
+  return {
+    username: state.username
+  }
 }
 
+export default connect(
+  mapStateTOProps,
+  {}
+)(Home);
 
-//validation setup
-const FormikHome = withFormik({
-  mapPropsToValues(title, body){
-      return{
-          title: "",
-          body: ""
-      }
-  },
-  //validation set up with error messages
-  validationSchema: Yup.object().shape({
-      title: Yup.string().required("Title is required"),
-      body: Yup.string().required("Content is required"),
-  }),
-  
-}) (Home)
-export default FormikHome
+
