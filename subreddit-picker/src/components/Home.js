@@ -42,6 +42,11 @@ const FormStyle = styled.form`
     padding:20px;
     align-items: center;
     width:100%;
+
+    p{
+        color:white;
+        font-size:.8rem;
+    }
 `
 const Input = styled.input`
   color:white;
@@ -221,6 +226,7 @@ const Button = styled.button`
             <FormStyle>
               <h1>Welcome to PostHere, {props.username}</h1>
                 <h2>The Subreddit Suggestor</h2>
+
             <Label>
               <Input 
               type="text" 
@@ -228,11 +234,14 @@ const Button = styled.button`
               placeholder="Title"
               ref={register({
                 required: true,
-                minLength: 4
+                minLength: {
+                  value: 4,
+                  message: "Title must contain 4 or more characters"
+              },
               })
               }
               />
-              {/* {touched.title && errors.title && (<p>{errors.title}</p>)} */}
+              <p>{errors.headline && errors.headline.message}</p>
             </Label>
 
              <Label>
@@ -243,12 +252,15 @@ const Button = styled.button`
                 placeholder="Post" rows="6" cols="50"
                 ref={register({
                   required: true,
-                  minLength: 10
+                  minLength: {
+                    value: 10,
+                    message: "Post must contain 10 or more characters"
+                },
                  })
 
                 }
                 />
-                {/* {touched.body && errors.body && (<p>{errors.body}</p>)} */}
+                <p>{errors.content && errors.content.message}</p>
             </Label>
 
             <Button type="submit">Submit</Button>
