@@ -121,6 +121,7 @@ const Button = styled.button`
     headline: "",
     content: ""
   });
+  const [stateChange, setStateChange] = useState(false)
   const [pastPosts, setPastPosts] = useState([]);
 
 
@@ -154,14 +155,12 @@ const Button = styled.button`
               setPastPosts(res.data)
             })
           }
-    }, [userId])
+    }, [userId, stateChange])
 
-    const handleChange = e => {
-        setNewPost({
-            ...newPost,
-            [e.target.name]: [e.target.value]
-        })
+    const stateChangeHelper = () => {
+      setStateChange(!stateChange)
     }
+
 
     const submissionHandler = values => {
       console.log("This is the new post before being sent to the backend", values)
@@ -170,6 +169,7 @@ const Button = styled.button`
         .then(res => {
           console.log("This should display the post that we want to send to the backend", values)
           console.log("This is the response from the post post request", res)
+          stateChangeHelper()
         })
         .catch(err => {
           console.log("An error occurred while trying to post", err)

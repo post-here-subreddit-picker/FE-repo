@@ -1,12 +1,12 @@
 import React from "react";
-import {useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import axios from "axios"
 import styled from "styled-components"
 import { Link } from "react-router-dom";
 
 
 //styles
-const FormStyle = styled.div`
+const FormStyle = styled.form`
     display:flex;
     flex-direction: column;
     padding:20px;
