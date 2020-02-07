@@ -1,5 +1,4 @@
 import {RETRIEVING_USERNAME, DELETING_POST, SET_PAST_POSTS} from '../actions'
-import {useLocalStorage} from "../hooks/useLocalStorage"
 const initialState = {
     username: "",
     id: "",

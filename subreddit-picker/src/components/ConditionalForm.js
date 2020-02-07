@@ -1,9 +1,7 @@
-import React, {useState, useEffect} from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 import styled from "styled-components"
-import {axiosWithAuth} from '../utils/AxiosWithAuth'
 import { useForm } from 'react-hook-form'
-import {deletePost, setPastPost} from '../actions'
+
 
 const FormDiv = styled.div`
   width:600px;
@@ -109,7 +107,7 @@ const Button = styled.button`
 }
 `
 export default function ConditionalForm(props){
-    const {handleSubmit, register, errors, reset} = useForm();
+    const {handleSubmit, register} = useForm();
 
 
 

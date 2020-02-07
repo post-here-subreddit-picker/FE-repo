@@ -4,8 +4,6 @@ import styled from "styled-components"
 import {axiosWithAuth} from '../utils/AxiosWithAuth'
 import { useForm } from 'react-hook-form'
 import {deletePost, setPastPost} from '../actions'
-import axios from "axios"
-import * as Yup from "yup"
 import ConditionalForm from './ConditionalForm'
 
 
@@ -118,7 +116,7 @@ const Button = styled.button`
 
 
  function Home(props) {
-  const {handleSubmit, register, errors, reset} = useForm();
+  const {handleSubmit, register, reset} = useForm();
   const [userId, setUserId] = useState(null)
   const [editing, setEditing] = useState(false);
   const [postToEdit, SetPostToEdit] = useState({
@@ -208,6 +206,7 @@ const Button = styled.button`
       .then( res => {
         console.log("Successful update the post has been updated", res)
         stateChangeHelper()
+        setEditing(false)
       })
       .catch(err => {
         console.log("An error occurred while trying to update a post", err)
