@@ -121,7 +121,7 @@ const Button = styled.button`
 
 
  function Home(props) {
-  const {handleSubmit, register, reset} = useForm();
+  const {handleSubmit, register, reset, errors} = useForm();
   const [userId, setUserId] = useState(null)
   const [editing, setEditing] = useState(false);
   const [postToEdit, SetPostToEdit] = useState({
@@ -187,7 +187,7 @@ const Button = styled.button`
       setEditing(true);
       SetPostToEdit(post)
     };
-// 
+//Handles the submission of new posts
 
     const submissionHandler = values => {
       console.log("This is the new post before being sent to the backend", values)
@@ -203,7 +203,7 @@ const Button = styled.button`
           console.log("An error occurred while trying to post", err)
         })
     }
-
+// Handles the update of past posts
     const updateHandler = valuesToChange => {
       console.log("These are the updated values before being sent to the backend for update", valuesToChange)
       axiosWithAuth()
