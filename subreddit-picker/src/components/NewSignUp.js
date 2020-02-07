@@ -74,7 +74,7 @@ export default function NewSignup(props) {
     const {handleSubmit, register, errors} = useForm();
     const onSubmit = values =>  {
         console.log("These are the values being passed to the backend", values)
-        axios.post("http://post-here3.herokuapp.com/api/auth/register", values)
+        axios.post("https://post-here3.herokuapp.com/api/auth/register", values)
             .then(res => {
                 console.log("successful sign in ", res)
                 props.history.push("/")

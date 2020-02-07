@@ -27,6 +27,7 @@ function Nav() {
                 <Link to="/home">Home</Link>
                 <Link to="/">Login</Link>
                 <Link to="./sign-up">Sign Up</Link>
+                
             </NavBar>
         </NavDiv>
     )
