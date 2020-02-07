@@ -59,6 +59,7 @@ const FormContainer = styled.div`
     background:#0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
+    text-align: center;
 
     h2{
         font-size:2.2rem;
@@ -89,7 +90,7 @@ const FormContainer = styled.div`
     ;
     return (
         <FormContainer>
-            <h2>Login</h2>
+            <h2>Log in</h2>
             <FormStyle onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                 <Inputs 
                 type="text"
