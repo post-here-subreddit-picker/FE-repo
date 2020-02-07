@@ -8,7 +8,7 @@ import Nav from "./components/Nav"
 import NewLogin from "./components/NewLogin"
 import NewSignUp from "./components/NewSignUp"
 import Image from "./components/Image"
-
+import "./App.css"
 function App() {
   return (
     <div className="App">

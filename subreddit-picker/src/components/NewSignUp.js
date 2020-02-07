@@ -58,6 +58,7 @@ const FormContainer = styled.div`
     background: #0079d3;
     border:1px solid white;
     box-shadow: 10px 8px 20px #2b2b2b7c;
+    text-align: center;
 
     h2{
         font-size:2.2rem;
