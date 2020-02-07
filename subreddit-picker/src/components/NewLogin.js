@@ -12,6 +12,11 @@ const FormStyle = styled.form`
     flex-direction: column;
     padding:20px;
     align-items: center;
+
+    p{
+        color:white;
+        font-size:.8rem;
+    }
 `
 const Inputs = styled.input`
     margin:10px;
@@ -85,21 +90,23 @@ const FormContainer = styled.div`
     return (
         <FormContainer>
             <h2>Login</h2>
-            <FormStyle onSubmit={handleSubmit(onSubmit)}>
+            <FormStyle onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                 <Inputs 
                 type="text"
                 name="username"
                 placeholder="username"
                 ref={register({
                     required: true,
-                minLength: 4,
+                minLength: {
+                    value: 4,
+                    message :"Username must contain 4 or more characters"},
                 maxLength: {
                     value: 15,
-                    message: "The username cannot exceed 15 characters"
+                    message: "Username cannot exceed 15 characters"
                 }
                 })}
             />
-            {errors.username && errors.username.message}
+            <p>{errors.username && errors.username.message}</p>
     
             <Inputs 
                 name="password"
@@ -109,7 +116,7 @@ const FormContainer = styled.div`
                     required: true,
                     minLength: {
                         value: 5,
-                        message: "The password must be at least 5 characters long"
+                        message: "Password must contain 5 or more characters"
                     },
                     // pattern: {
                     //     value:  /A-Z 0-9/i,
@@ -117,7 +124,7 @@ const FormContainer = styled.div`
                     // }
                 })}
             />
-            {errors.password && errors.password.message}
+            <p>{errors.password && errors.password.message}</p>
     
             <Button type="submit">Login</Button>
             </FormStyle>

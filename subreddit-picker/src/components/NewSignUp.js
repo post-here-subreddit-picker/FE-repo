@@ -11,6 +11,11 @@ const FormStyle = styled.form`
     flex-direction: column;
     padding:20px;
     align-items: center;
+
+    p{
+        color:white;
+        font-size:.8rem;
+    }
 `
 const Inputs = styled.input`
     margin:10px;
@@ -83,18 +88,23 @@ export default function NewSignup(props) {
     return (
         <FormContainer>
             <h2>Sign Up</h2>
-        <FormStyle onSubmit={handleSubmit(onSubmit)}>
+        <FormStyle onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Inputs 
             type="text"
             name="username"
             placeholder="username"
             ref={register({
                 required: true,
-            minLength: 4,
-            maxLength: 14
+            minLength: {
+                value: 4,
+                message :"Username must contain 4 or more characters"},
+            maxLength: {
+                value: 15,
+                message: "Username cannot exceed 15 characters"
+            }
             })}
         />
-        {errors.username && errors.username.message}
+        <p>{errors.username && errors.username.message}</p>
 
         <Inputs 
             type="password"
@@ -104,7 +114,7 @@ export default function NewSignup(props) {
                 required: true,
                 minLength: {
                     value: 5,
-                    message: "The password must be at least 5 characters long"
+                    message: "Password must contain 5 or more characters"
                 },
                 // pattern: {
                 //     value:  /A-Z 0-9/i,
@@ -112,7 +122,7 @@ export default function NewSignup(props) {
                 // }
             })}
         />
-        {errors.password && errors.password.message}
+        <p>{errors.password && errors.password.message}</p>
 
         <Button type="submit">Sign Up</Button>
         </FormStyle>
